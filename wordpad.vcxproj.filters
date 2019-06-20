@@ -104,168 +104,166 @@
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="buttondi.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="chicdial.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="cntritem.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="colorlis.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="datedial.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="ddxm.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="docopt.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="doctype.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="filenewd.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="formatba.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="formatpa.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="formatta.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="helpids.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="ipframe.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="key.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="listdlg.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="mainfrm.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="mswd6_32.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="multconv.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="options.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="optionsh.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="pageset.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="ruler.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="splash.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="srvritem.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="stdafx.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="strings.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="unitspag.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="wordpad.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="wordpdoc.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="wordpvw.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="res\font.bmp">
-      <Filter>Resource Files</Filter>
-    </None>
-    <None Include="res\formatba.bmp">
-      <Filter>Resource Files</Filter>
-    </None>
-    <None Include="res\formatbg.bmp">
-      <Filter>Resource Files</Filter>
-    </None>
-    <None Include="res\main1.bmp">
-      <Filter>Resource Files</Filter>
-    </None>
-    <None Include="res\main1b.bmp">
-      <Filter>Resource Files</Filter>
-    </None>
-    <None Include="res\rtfdoc.ico">
-      <Filter>Resource Files</Filter>
-    </None>
-    <None Include="res\rulerbl.bmp">
-      <Filter>Resource Files</Filter>
-    </None>
-    <None Include="res\rulerblm.bmp">
-      <Filter>Resource Files</Filter>
-    </None>
-    <None Include="res\rulerdo.bmp">
-      <Filter>Resource Files</Filter>
-    </None>
-    <None Include="res\rulerdom.bmp">
-      <Filter>Resource Files</Filter>
-    </None>
-    <None Include="res\rulerta.bmp">
-      <Filter>Resource Files</Filter>
-    </None>
-    <None Include="res\rulertam.bmp">
-      <Filter>Resource Files</Filter>
-    </None>
-    <None Include="res\rulerup.bmp">
-      <Filter>Resource Files</Filter>
-    </None>
-    <None Include="res\rulerupm.bmp">
-      <Filter>Resource Files</Filter>
-    </None>
-    <None Include="res\srvr.bmp">
-      <Filter>Resource Files</Filter>
-    </None>
-    <None Include="res\srvrbig.bmp">
-      <Filter>Resource Files</Filter>
-    </None>
-    <None Include="res\textdoc.ico">
-      <Filter>Resource Files</Filter>
-    </None>
-    <None Include="res\wordp48.bmp">
-      <Filter>Resource Files</Filter>
-    </None>
-    <None Include="res\wordpad.ico">
-      <Filter>Resource Files</Filter>
-    </None>
-    <None Include="res\wordpad.rc2">
-      <Filter>Resource Files</Filter>
-    </None>
-    <None Include="res\write.ico">
-      <Filter>Resource Files</Filter>
-    </None>
-  </ItemGroup>
-  <ItemGroup>
     <ResourceCompile Include="wordpad.rc">
       <Filter>Resource Files</Filter>
     </ResourceCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <CustomBuild Include="buttondi.h">
+      <Filter>Header Files</Filter>
+    </CustomBuild>
+    <CustomBuild Include="chicdial.h">
+      <Filter>Header Files</Filter>
+    </CustomBuild>
+    <CustomBuild Include="cntritem.h">
+      <Filter>Header Files</Filter>
+    </CustomBuild>
+    <CustomBuild Include="colorlis.h">
+      <Filter>Header Files</Filter>
+    </CustomBuild>
+    <CustomBuild Include="datedial.h">
+      <Filter>Header Files</Filter>
+    </CustomBuild>
+    <CustomBuild Include="ddxm.h">
+      <Filter>Header Files</Filter>
+    </CustomBuild>
+    <CustomBuild Include="docopt.h">
+      <Filter>Header Files</Filter>
+    </CustomBuild>
+    <CustomBuild Include="doctype.h">
+      <Filter>Header Files</Filter>
+    </CustomBuild>
+    <CustomBuild Include="filenewd.h">
+      <Filter>Header Files</Filter>
+    </CustomBuild>
+    <CustomBuild Include="formatba.h">
+      <Filter>Header Files</Filter>
+    </CustomBuild>
+    <CustomBuild Include="formatpa.h">
+      <Filter>Header Files</Filter>
+    </CustomBuild>
+    <CustomBuild Include="formatta.h">
+      <Filter>Header Files</Filter>
+    </CustomBuild>
+    <CustomBuild Include="helpids.h">
+      <Filter>Header Files</Filter>
+    </CustomBuild>
+    <CustomBuild Include="ipframe.h">
+      <Filter>Header Files</Filter>
+    </CustomBuild>
+    <CustomBuild Include="key.h">
+      <Filter>Header Files</Filter>
+    </CustomBuild>
+    <CustomBuild Include="listdlg.h">
+      <Filter>Header Files</Filter>
+    </CustomBuild>
+    <CustomBuild Include="mainfrm.h">
+      <Filter>Header Files</Filter>
+    </CustomBuild>
+    <CustomBuild Include="mswd6_32.h">
+      <Filter>Header Files</Filter>
+    </CustomBuild>
+    <CustomBuild Include="multconv.h">
+      <Filter>Header Files</Filter>
+    </CustomBuild>
+    <CustomBuild Include="options.h">
+      <Filter>Header Files</Filter>
+    </CustomBuild>
+    <CustomBuild Include="optionsh.h">
+      <Filter>Header Files</Filter>
+    </CustomBuild>
+    <CustomBuild Include="pageset.h">
+      <Filter>Header Files</Filter>
+    </CustomBuild>
+    <CustomBuild Include="res\font.bmp">
+      <Filter>Resource Files</Filter>
+    </CustomBuild>
+    <CustomBuild Include="res\formatba.bmp">
+      <Filter>Resource Files</Filter>
+    </CustomBuild>
+    <CustomBuild Include="res\formatbg.bmp">
+      <Filter>Resource Files</Filter>
+    </CustomBuild>
+    <CustomBuild Include="res\main1.bmp">
+      <Filter>Resource Files</Filter>
+    </CustomBuild>
+    <CustomBuild Include="res\main1b.bmp">
+      <Filter>Resource Files</Filter>
+    </CustomBuild>
+    <CustomBuild Include="res\rtfdoc.ico">
+      <Filter>Resource Files</Filter>
+    </CustomBuild>
+    <CustomBuild Include="res\rulerbl.bmp">
+      <Filter>Resource Files</Filter>
+    </CustomBuild>
+    <CustomBuild Include="res\rulerblm.bmp">
+      <Filter>Resource Files</Filter>
+    </CustomBuild>
+    <CustomBuild Include="res\rulerdo.bmp">
+      <Filter>Resource Files</Filter>
+    </CustomBuild>
+    <CustomBuild Include="res\rulerdom.bmp">
+      <Filter>Resource Files</Filter>
+    </CustomBuild>
+    <CustomBuild Include="res\rulerta.bmp">
+      <Filter>Resource Files</Filter>
+    </CustomBuild>
+    <CustomBuild Include="res\rulertam.bmp">
+      <Filter>Resource Files</Filter>
+    </CustomBuild>
+    <CustomBuild Include="res\rulerup.bmp">
+      <Filter>Resource Files</Filter>
+    </CustomBuild>
+    <CustomBuild Include="res\rulerupm.bmp">
+      <Filter>Resource Files</Filter>
+    </CustomBuild>
+    <CustomBuild Include="res\srvr.bmp">
+      <Filter>Resource Files</Filter>
+    </CustomBuild>
+    <CustomBuild Include="res\srvrbig.bmp">
+      <Filter>Resource Files</Filter>
+    </CustomBuild>
+    <CustomBuild Include="res\textdoc.ico">
+      <Filter>Resource Files</Filter>
+    </CustomBuild>
+    <CustomBuild Include="res\wordp48.bmp">
+      <Filter>Resource Files</Filter>
+    </CustomBuild>
+    <CustomBuild Include="res\wordpad.ico">
+      <Filter>Resource Files</Filter>
+    </CustomBuild>
+    <CustomBuild Include="res\wordpad.rc2">
+      <Filter>Resource Files</Filter>
+    </CustomBuild>
+    <CustomBuild Include="res\write.ico">
+      <Filter>Resource Files</Filter>
+    </CustomBuild>
+    <CustomBuild Include="ruler.h">
+      <Filter>Header Files</Filter>
+    </CustomBuild>
+    <CustomBuild Include="splash.h">
+      <Filter>Header Files</Filter>
+    </CustomBuild>
+    <CustomBuild Include="srvritem.h">
+      <Filter>Header Files</Filter>
+    </CustomBuild>
+    <CustomBuild Include="stdafx.h">
+      <Filter>Header Files</Filter>
+    </CustomBuild>
+    <CustomBuild Include="strings.h">
+      <Filter>Header Files</Filter>
+    </CustomBuild>
+    <CustomBuild Include="unitspag.h">
+      <Filter>Header Files</Filter>
+    </CustomBuild>
+    <CustomBuild Include="wordpad.h">
+      <Filter>Header Files</Filter>
+    </CustomBuild>
+    <CustomBuild Include="wordpdoc.h">
+      <Filter>Header Files</Filter>
+    </CustomBuild>
+    <CustomBuild Include="wordpvw.h">
+      <Filter>Header Files</Filter>
+    </CustomBuild>
   </ItemGroup>
 </Project>

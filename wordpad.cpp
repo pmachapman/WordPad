@@ -94,10 +94,15 @@ CWordPadApp::CWordPadApp() : m_optionsText(0), m_optionsRTF(1),
 	_tsetlocale(LC_ALL, _T(""));
 
 	m_nFilterIndex = 1;
+#if _MFC_VER < 0x0700
 	DWORD dwVersion = ::GetVersion();
 	m_bWin4 = (BYTE)dwVersion >= 4;
 #ifndef _UNICODE
 	m_bWin31 = (dwVersion > 0x80000000 && !m_bWin4);
+#endif
+#else
+	m_bWin4 = TRUE;
+	m_bWin31 = FALSE;
 #endif
 	m_nDefFont = (m_bWin4) ? DEFAULT_GUI_FONT : ANSI_VAR_FONT;
 	m_dcScreen.Attach(::GetDC(NULL));

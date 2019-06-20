@@ -46,13 +46,14 @@ DocType doctypes[NUM_DOC_TYPES] =
 	DECLARE_DOCTYPE_NULL(EMBEDDED, FALSE, FALSE, FALSE, NULL)
 };
 
-CString DocType::GetString(int nID)
+CString DocType::GetString(int nIndex)
 {
 	ASSERT(idStr != NULL);
 	CString str;
 	VERIFY(str.LoadString(idStr));
 	CString strSub;
-	AfxExtractSubString(strSub, str, nID);
+	AfxExtractSubString(strSub, str, nIndex);
+	nID = nIndex;
 	return strSub;
 }
 

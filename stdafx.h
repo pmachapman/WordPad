@@ -16,6 +16,9 @@
 #define VC_EXTRALEAN        // use stripped down Win32 headers
 #endif
 
+#define WINVER 0x0501
+#define _WIN32_WINNT 0x0501
+
 #define CONVERTERS
 
 #include <afxwin.h>         // MFC core and standard components
