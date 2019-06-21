@@ -794,6 +794,8 @@ BOOL RegisterHelper(LPCTSTR* rglpszRegister, LPCTSTR* rglpszSymbols,
 {
 	ENSURE(rglpszRegister != NULL);
 	ASSERT(rglpszSymbols != NULL);
+	if (rglpszRegister == NULL || rglpszSymbols == NULL)
+		return FALSE;
 
 	CString strKey;
 	CString strValueName;
@@ -830,21 +832,23 @@ BOOL RegisterHelper(LPCTSTR* rglpszRegister, LPCTSTR* rglpszSymbols,
 		}
 
 		CKey key;
-		VERIFY(key.Create(HKEY_CLASSES_ROOT, strKey));
-		if (!bReplace)
+		if (key.Create(HKEY_CLASSES_ROOT, strKey))
 		{
-			CString str;
-			if (key.GetStringValue(str, strValueName) && !str.IsEmpty())
-				continue;
-		}
+			if (!bReplace)
+			{
+				CString str;
+				if (key.GetStringValue(str, strValueName) && !str.IsEmpty())
+					continue;
+			}
 
-		if (!key.SetStringValue(strValue, strValueName))
-		{
-			TRACE2("Error: failed setting key '%s' to value '%s'.\n",
-				(LPCTSTR)strKey, (LPCTSTR)strValue);
-			bResult = FALSE;
-			break;
-		}
+			if (!key.SetStringValue(strValue, strValueName))
+			{
+				TRACE2("Error: failed setting key '%s' to value '%s'.\n",
+					(LPCTSTR)strKey, (LPCTSTR)strValue);
+				bResult = FALSE;
+				break;
+			}
+			}
 	}
 
 	return bResult;
