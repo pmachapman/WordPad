@@ -313,6 +313,9 @@
   <ItemGroup>
     <ResourceCompile Include="wordpad.rc" />
   </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="targetver.h" />
+  </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
   </ImportGroup>

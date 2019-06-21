@@ -16,8 +16,7 @@
 #define VC_EXTRALEAN        // use stripped down Win32 headers
 #endif
 
-#define WINVER 0x0501
-#define _WIN32_WINNT 0x0501
+#include "targetver.h"
 
 #define CONVERTERS
 
@@ -52,3 +51,20 @@ struct CParaFormat : public PARAFORMAT2
 
 #include "doctype.h"
 #include "chicdial.h"
+
+#ifndef _AFX_NO_OLE_SUPPORT
+#include <afxdtctl.h>		// MFC support for Internet Explorer 4 Common Controls
+#endif
+#ifndef _AFX_NO_AFXCMN_SUPPORT
+#include <afxcmn.h>			// MFC support for Windows Common Controls
+#endif // _AFX_NO_AFXCMN_SUPPORT
+
+#include <afxcontrolbars.h>	// MFC ribbon and control bar support
+
+#if defined _M_IX86
+#pragma comment(linker,"/manifestdependency:\"type='win32' name='Microsoft.Windows.Common-Controls' version='6.0.0.0' processorArchitecture='x86' publicKeyToken='6595b64144ccf1df' language='*'\"")
+#elif defined _M_X64
+#pragma comment(linker,"/manifestdependency:\"type='win32' name='Microsoft.Windows.Common-Controls' version='6.0.0.0' processorArchitecture='amd64' publicKeyToken='6595b64144ccf1df' language='*'\"")
+#else
+#pragma comment(linker,"/manifestdependency:\"type='win32' name='Microsoft.Windows.Common-Controls' version='6.0.0.0' processorArchitecture='*' publicKeyToken='6595b64144ccf1df' language='*'\"")
+#endif
