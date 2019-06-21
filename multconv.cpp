@@ -107,11 +107,14 @@ HGLOBAL CConverter::StringToHGLOBAL(LPCSTR pstr)
 	if (pstr != NULL)
 	{
 		hMem = GlobalAlloc(GHND, (lstrlenA(pstr)*2)+1);
-		char* p = (char*) GlobalLock(hMem);
-		ASSERT(p != NULL);
-		if (p != NULL)
-			strcpy_s(p, (lstrlenA(pstr)*2)+1, pstr);
-		GlobalUnlock(hMem);
+		if (hMem != NULL)
+		{
+			char* p = (char*)GlobalLock(hMem);
+			ASSERT(p != NULL);
+			if (p != NULL)
+				strcpy_s(p, (lstrlenA(pstr) * 2) + 1, pstr);
+			GlobalUnlock(hMem);
+		}
 	}
 	return hMem;
 }
@@ -129,7 +132,12 @@ CConverter::CConverter(LPCSTR pszLibName, CFrameWnd* pWnd) : CTrackFile(pWnd)
 	m_bDone = TRUE;
 	m_bConvErr = FALSE;
 	m_hFileName = NULL;
-	OFSTRUCT ofs;
+	m_pInitConverter = NULL;
+	m_pIsFormatCorrect = NULL;
+	m_bForeignToRtf = FALSE;
+	m_pForeignToRtf = NULL;
+	m_pRtfToForeign = NULL;
+	OFSTRUCT ofs = {};
 	if (OpenFile(pszLibName, &ofs, OF_EXIST) == HFILE_ERROR)
 	{
 		m_hLibCnv = NULL;
@@ -155,10 +163,20 @@ CConverter::CConverter(CFrameWnd* pWnd) : CTrackFile(pWnd)
 {
 	m_pInitConverter = NULL;
 	m_pIsFormatCorrect = NULL;
+	m_bForeignToRtf = FALSE;
 	m_pForeignToRtf = NULL;
 	m_pRtfToForeign = NULL;
 	m_bConvErr = FALSE;
 	m_hFileName = NULL;
+	m_hBuff = NULL;
+	m_pBuf = NULL;
+	m_nBytesAvail = 0;
+	m_nBytesWritten = 0;
+	m_nPercent = 0;
+	m_hEventFile = NULL;
+	m_hEventConv = NULL;
+	m_bDone = TRUE;
+	m_hLibCnv = NULL;
 }
 
 CConverter::~CConverter()
@@ -299,8 +317,9 @@ BOOL CConverter::DoConversion()
 	{
 		ASSERT(m_pForeignToRtf != NULL);
 		ASSERT(m_hFileName != NULL);
-		nRet = m_pForeignToRtf(m_hFileName, NULL, m_hBuff, hDesc, hSubset,
-			(LPFNOUT)WriteOutStatic);
+		if (m_pForeignToRtf != NULL)
+			nRet = m_pForeignToRtf(m_hFileName, NULL, m_hBuff, hDesc, hSubset,
+				(LPFNOUT)WriteOutStatic);
 		// wait for next CConverter::Read to come through
 		WaitForBuffer();
 		VERIFY(ResetEvent(m_hEventConv));
@@ -309,16 +328,20 @@ BOOL CConverter::DoConversion()
 	{
 		ASSERT(m_pRtfToForeign != NULL);
 		ASSERT(m_hFileName != NULL);
-		nRet = m_pRtfToForeign(m_hFileName, NULL, m_hBuff, hDesc,
-			(LPFNIN)ReadInStatic);
+		if (m_pRtfToForeign != NULL)
+			nRet = m_pRtfToForeign(m_hFileName, NULL, m_hBuff, hDesc,
+				(LPFNIN)ReadInStatic);
 		// don't need to wait for m_hEventConv
 	}
 
 	GlobalFree(hDesc);
 	GlobalFree(hSubset);
-	if (m_pBuf != NULL)
-		GlobalUnlock(m_hBuff);
-	GlobalFree(m_hBuff);
+	if (m_hBuff != NULL)
+	{
+		if (m_pBuf != NULL)
+			GlobalUnlock(m_hBuff);
+		GlobalFree(m_hBuff);
+	}
 
 	if (nRet != 0)
 		m_bConvErr = TRUE;
@@ -455,10 +478,13 @@ void CConverter::Write(const void FAR* lpBuf, UINT nCount)
 			AfxThrowFileException(CFileException::genericException);
 		m_nBytesAvail = min(nCount, BUFFSIZE);
 		nCount -= m_nBytesAvail;
-		BYTE* pBuf = (BYTE*)GlobalLock(m_hBuff);
-		ASSERT(pBuf != NULL);
-		memcpy_s(pBuf, nCount, lpBuf, m_nBytesAvail);
-		GlobalUnlock(m_hBuff);
+		if (nCount > 0)
+		{
+			BYTE* pBuf = (BYTE*)GlobalLock(m_hBuff);
+			ASSERT(pBuf != NULL);
+			memcpy_s(pBuf, nCount, lpBuf, m_nBytesAvail);
+			GlobalUnlock(m_hBuff);
+		}
 		SetEvent(m_hEventConv);
 	}
 	OutputString(m_strSaving);
