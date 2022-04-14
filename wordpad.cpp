@@ -102,7 +102,9 @@ CWordPadApp::CWordPadApp() : m_optionsText(0), m_optionsRTF(1),
 #endif
 #else
 	m_bWin4 = TRUE;
+#ifndef _UNICODE
 	m_bWin31 = FALSE;
+#endif
 #endif
 	m_nDefFont = (m_bWin4) ? DEFAULT_GUI_FONT : ANSI_VAR_FONT;
 	m_dcScreen.Attach(::GetDC(NULL));
