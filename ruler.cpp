@@ -40,8 +40,8 @@ CRulerItem::CRulerItem(UINT nBitmapID)
 		ASSERT(m_hbmMask != NULL);
 		VERIFY(LoadMaskedBitmap(MAKEINTRESOURCE(nBitmapID)));
 		BITMAP bm;
-		::GetObject(m_hbm, sizeof(BITMAP), &bm);
-		m_size = CSize(bm.bmWidth, bm.bmHeight);
+		if (::GetObject(m_hbm, sizeof(BITMAP), &bm));
+			m_size = CSize(bm.bmWidth, bm.bmHeight);
 	}
 }
 
@@ -56,6 +56,8 @@ CRulerItem::~CRulerItem()
 BOOL CRulerItem::LoadMaskedBitmap(LPCTSTR lpszResourceName)
 {
 	ASSERT(lpszResourceName != NULL);
+	if (lpszResourceName == NULL)
+		return FALSE;
 
 	if (m_hbm != NULL)
 		::DeleteObject(m_hbm);

@@ -64,7 +64,7 @@ static UINT DoRegistry(LPVOID lpv)
 /////////////////////////////////////////////////////////////////////////////
 // CWordPadApp
 
-BEGIN_MESSAGE_MAP(CWordPadApp, CWinApp)
+BEGIN_MESSAGE_MAP(CWordPadApp, CWinAppEx)
 	//{{AFX_MSG_MAP(CWordPadApp)
 	ON_COMMAND(ID_APP_ABOUT, OnAppAbout)
 	ON_COMMAND(ID_FILE_NEW, OnFileNew)
@@ -88,7 +88,7 @@ void CWordPadCommandLineInfo::ParseParam(const char* pszParam,BOOL bFlag,BOOL bL
 /////////////////////////////////////////////////////////////////////////////
 // CWordPadApp construction
 
-CWordPadApp::CWordPadApp() : m_optionsText(0), m_optionsRTF(1),
+CWordPadApp::CWordPadApp() : CWinAppEx(TRUE), m_optionsText(0), m_optionsRTF(1),
 	m_optionsWord(2), m_optionsWrite(2), m_optionsIP(2), m_optionsNull(0)  //
 {
 	_tsetlocale(LC_ALL, _T(""));
@@ -107,7 +107,15 @@ CWordPadApp::CWordPadApp() : m_optionsText(0), m_optionsRTF(1),
 	m_nDefFont = (m_bWin4) ? DEFAULT_GUI_FONT : ANSI_VAR_FONT;
 	m_dcScreen.Attach(::GetDC(NULL));
 	m_bLargeIcons = m_dcScreen.GetDeviceCaps(LOGPIXELSX) >= 120;
+	m_bHiColorIcons = FALSE;
 	m_bForceOEM = FALSE;
+	m_bForceTextMode = FALSE;
+	m_bMaximized = FALSE;
+	m_bPromptForType = FALSE;
+	m_bWordSel = FALSE;
+	m_lf = {};
+	m_nNewDocType = NULL;
+	m_nUnits = NULL;
 }
 
 CWordPadApp::~CWordPadApp()
@@ -216,6 +224,25 @@ BOOL CWordPadApp::InitInstance()
 
 	LoadStdProfileSettings();  // Load standard INI file options (including MRU)
 
+	// Initialize all Managers for usage. They are automatically constructed
+	// if not yet present
+	SetRegistryBase(_T("WordPad"));
+
+	InitContextMenuManager();
+	InitKeyboardManager();
+
+	InitTooltipManager();
+
+	CMFCToolTipInfo params;
+	params.m_bVislManagerTheme = TRUE;
+
+	theApp.GetTooltipManager()->SetTooltipParams(
+		0xFFFF,
+		RUNTIME_CLASS(CMFCToolTipCtrl),
+		&params);
+
+	// EnableTearOffMenus(NULL, ID_FREE_TEAROFF1, ID_FREE_TEAROFF2);
+
 	// Register the application's document templates.  Document templates
 	//  serve as the connection between documents, frame windows and views.
 
@@ -264,6 +291,8 @@ BOOL CWordPadApp::InitInstance()
 	{
 		return FALSE;
 	}
+
+	LoadCustomState();
 
 	// Enable File Manager drag/drop open
 	m_pMainWnd->DragAcceptFiles();
@@ -377,7 +406,7 @@ void CWordPadApp::LoadOptions()
 	HFONT hFont = (HFONT)GetStockObject(DEFAULT_GUI_FONT);
 	if (hFont == NULL)
 		hFont = (HFONT)GetStockObject(ANSI_VAR_FONT);
-	VERIFY(GetObject(hFont, sizeof(LOGFONT), &m_lf));
+	VERIFY(::GetObject(hFont, sizeof(LOGFONT), &m_lf));
 
 	m_bWordSel = GetProfileInt(szSection, szWordSel, TRUE);
 	TCHAR buf[2];
@@ -422,7 +451,7 @@ void CWordPadApp::LoadOptions()
 void CWordPadApp::LoadAbbrevStrings()
 {
 	for (int i=0;i<m_nNumUnits;i++)
-		m_units[i].m_strAbbrev.LoadString(m_units[i].m_nAbbrevID);
+		ASSERT(m_units[i].m_strAbbrev.LoadString(m_units[i].m_nAbbrevID));
 }
 
 BOOL CWordPadApp::ParseMeasurement(LPTSTR buf, int& lVal)
@@ -509,10 +538,15 @@ int CWordPadApp::ExitInstance()
 {
 	m_pszHelpFilePath = NULL;
 
-	FreeLibrary(GetModuleHandle(_T("RICHED32.DLL")));
+	HMODULE h = GetModuleHandle(_T("RICHED32.DLL"));
+	if (h != NULL)
+	{
+		FreeLibrary(h);
+	}
+
 	SaveOptions();
 
-	return CWinApp::ExitInstance();
+	return CWinAppEx::ExitInstance();
 }
 
 void CWordPadApp::OnFileNew()
@@ -754,39 +788,41 @@ void CWordPadApp::UpdateRegistry()
 
 	ASSERT(strServerName.Find(' ') == -1);  // no spaces allowed
 
-	::StringFromCLSID(clsid, &lpszClassID);
-	ASSERT (lpszClassID != NULL);
+	if (::StringFromCLSID(clsid, &lpszClassID) == S_OK)
+	{
+		ASSERT(lpszClassID != NULL);
 
-	// get path name to server
-	TCHAR szLongPathName[_MAX_PATH];
-	TCHAR szShortPathName[_MAX_PATH];
-	::GetModuleFileName(AfxGetInstanceHandle(), szLongPathName, _MAX_PATH);
-	::GetShortPathName(szLongPathName, szShortPathName, _MAX_PATH);
+		// get path name to server
+		TCHAR szLongPathName[_MAX_PATH];
+		TCHAR szShortPathName[_MAX_PATH];
+		::GetModuleFileName(AfxGetInstanceHandle(), szLongPathName, _MAX_PATH);
+		::GetShortPathName(szLongPathName, szShortPathName, _MAX_PATH);
 
-	LPCTSTR rglpszSymbols[NUM_REG_ARGS];
-	rglpszSymbols[0] = COLE2CT(lpszClassID);
-	rglpszSymbols[1] = strServerName;
-	rglpszSymbols[2] = szShortPathName;
-	rglpszSymbols[3] = strLocalShortName;
-	rglpszSymbols[4] = strLocalServerName;
-	rglpszSymbols[5] = m_pszAppName;    // will usually be long, readable name
-	rglpszSymbols[6] = NULL;
+		LPCTSTR rglpszSymbols[NUM_REG_ARGS];
+		rglpszSymbols[0] = COLE2CT(lpszClassID);
+		rglpszSymbols[1] = strServerName;
+		rglpszSymbols[2] = szShortPathName;
+		rglpszSymbols[3] = strLocalShortName;
+		rglpszSymbols[4] = strLocalServerName;
+		rglpszSymbols[5] = m_pszAppName;    // will usually be long, readable name
+		rglpszSymbols[6] = NULL;
 
-	if (RegisterHelper((LPCTSTR*)rglpszWordPadRegister, rglpszSymbols, FALSE))
-		RegisterHelper((LPCTSTR*)rglpszWordPadOverwrite, rglpszSymbols, TRUE);
+		if (RegisterHelper((LPCTSTR*)rglpszWordPadRegister, rglpszSymbols, FALSE))
+			RegisterHelper((LPCTSTR*)rglpszWordPadOverwrite, rglpszSymbols, TRUE);
 
-//  RegisterExt(_T(".txt"), _T("txtfile"), IDS_TEXT_DOC, rglpszSymbols,
-//      (LPCTSTR*)rglpszTxtExtRegister, (LPCTSTR*)rglpszTxtRegister, 3);
-	RegisterExt(_T(".rtf"), _T("rtffile"), IDS_RICHTEXT_DOC, rglpszSymbols,
-		(LPCTSTR*)rglpszRtfExtRegister, (LPCTSTR*)rglpszRtfRegister, 1);
-	RegisterExt(_T(".wri"), _T("wrifile"), IDS_WRITE_DOC, rglpszSymbols,
-		(LPCTSTR*)rglpszWriExtRegister, (LPCTSTR*)rglpszWriRegister, 2);
-	RegisterExt(_T(".doc"), _T("WordPad.Document.1"), IDS_WINWORD6_DOC, rglpszSymbols,
-		(LPCTSTR*)rglpszDocExtRegister, (LPCTSTR*)rglpszDocRegister, 1);
+		//  RegisterExt(_T(".txt"), _T("txtfile"), IDS_TEXT_DOC, rglpszSymbols,
+		//      (LPCTSTR*)rglpszTxtExtRegister, (LPCTSTR*)rglpszTxtRegister, 3);
+		RegisterExt(_T(".rtf"), _T("rtffile"), IDS_RICHTEXT_DOC, rglpszSymbols,
+			(LPCTSTR*)rglpszRtfExtRegister, (LPCTSTR*)rglpszRtfRegister, 1);
+		RegisterExt(_T(".wri"), _T("wrifile"), IDS_WRITE_DOC, rglpszSymbols,
+			(LPCTSTR*)rglpszWriExtRegister, (LPCTSTR*)rglpszWriRegister, 2);
+		RegisterExt(_T(".doc"), _T("WordPad.Document.1"), IDS_WINWORD6_DOC, rglpszSymbols,
+			(LPCTSTR*)rglpszDocExtRegister, (LPCTSTR*)rglpszDocRegister, 1);
 
-	// free memory for class ID
-	ASSERT(lpszClassID != NULL);
-	CoTaskMemFree(lpszClassID);
+		// free memory for class ID
+		ASSERT(lpszClassID != NULL);
+		CoTaskMemFree(lpszClassID);
+	}
 }
 
 BOOL RegisterHelper(LPCTSTR* rglpszRegister, LPCTSTR* rglpszSymbols,
@@ -858,14 +894,14 @@ void CWordPadApp::WinHelp(DWORD dwData, UINT nCmd)
 {
 	if (nCmd == HELP_INDEX)
 		nCmd = HELP_FINDER;
-	CWinApp::WinHelp(dwData, nCmd);
+	CWinAppEx::WinHelp(dwData, nCmd);
 }
 
 BOOL CWordPadApp::PreTranslateMessage(MSG* pMsg)
 {
 	if (pMsg->message == WM_PAINT)
 		return FALSE;
-	// CWinApp::PreTranslateMessage does nothing but call base
+	// CWinAppEx::PreTranslateMessage does nothing but call base
 	return CWinThread::PreTranslateMessage(pMsg);
 }
 
@@ -885,31 +921,32 @@ BOOL CWordPadApp::IsIdleMessage(MSG* pMsg)
 {
 	if (pMsg->message == WM_MOUSEMOVE || pMsg->message == WM_NCMOUSEMOVE)
 		return FALSE;
-	return CWinApp::IsIdleMessage(pMsg);
+	return CWinAppEx::IsIdleMessage(pMsg);
 }
 
 HGLOBAL CWordPadApp::CreateDevNames()
 {
 	HGLOBAL hDev = NULL;
-	if (!cmdInfo.m_strDriverName.IsEmpty() && !cmdInfo.m_strPrinterName.IsEmpty() &&
-		!cmdInfo.m_strPortName.IsEmpty())
+	if (!cmdInfo.m_strDriverName.IsEmpty() && !cmdInfo.m_strPrinterName.IsEmpty() && !cmdInfo.m_strPortName.IsEmpty())
 	{
-		int nAllocSize = 4 * sizeof(WORD) +
-			cmdInfo.m_strDriverName.GetLength() + 1 +
-			cmdInfo.m_strPrinterName.GetLength() + 1 +
-			cmdInfo.m_strPortName.GetLength() + 1;
-		hDev = GlobalAlloc(GPTR, nAllocSize);
-		LPDEVNAMES lpDev = (LPDEVNAMES)GlobalLock(hDev);
-		lpDev->wDriverOffset = sizeof(WORD)*4;
-		_tcscpy_s((TCHAR*)lpDev + lpDev->wDriverOffset, nAllocSize - lpDev->wDriverOffset, cmdInfo.m_strDriverName);
+		hDev = GlobalAlloc(GPTR, 4 * sizeof(WORD) + ((cmdInfo.m_strDriverName.GetLength() + 1 + cmdInfo.m_strPrinterName.GetLength() + 1 + cmdInfo.m_strPortName.GetLength() + 1) * sizeof(TCHAR)));
+		if (hDev != NULL)
+		{
+			LPDEVNAMES lpDev = (LPDEVNAMES)GlobalLock(hDev);
+			if (lpDev != NULL)
+			{
+				lpDev->wDriverOffset = sizeof(WORD) * 4;
+				lstrcpy((TCHAR*)lpDev + lpDev->wDriverOffset, cmdInfo.m_strDriverName);
 
-		lpDev->wDeviceOffset = (WORD)(lpDev->wDriverOffset + cmdInfo.m_strDriverName.GetLength()+1);
-		_tcscpy_s((TCHAR*)lpDev + lpDev->wDriverOffset, nAllocSize - lpDev->wDriverOffset, cmdInfo.m_strPrinterName);
+				lpDev->wDeviceOffset = (WORD)(lpDev->wDriverOffset + ((cmdInfo.m_strDriverName.GetLength() + 1) * sizeof(TCHAR)));
+				lstrcpy((TCHAR*)lpDev + lpDev->wDeviceOffset, cmdInfo.m_strPrinterName);
 
-		lpDev->wOutputOffset = (WORD)(lpDev->wDeviceOffset + cmdInfo.m_strPrinterName.GetLength()+1);
-		_tcscpy_s((TCHAR*)lpDev + lpDev->wDriverOffset, nAllocSize - lpDev->wDriverOffset, cmdInfo.m_strPortName);
+				lpDev->wOutputOffset = (WORD)(lpDev->wDeviceOffset + ((cmdInfo.m_strPrinterName.GetLength() + 1) * sizeof(TCHAR)));
+				lstrcpy((TCHAR*)lpDev + lpDev->wOutputOffset, cmdInfo.m_strPortName);
 
-		lpDev->wDefault = 0;
+				lpDev->wDefault = 0;
+			}
+		}
 	}
 	return hDev;
 }

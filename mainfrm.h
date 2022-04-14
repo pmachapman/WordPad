@@ -12,7 +12,7 @@
 #include "formatba.h"
 #include "ruler.h"
 
-class CMainFrame : public CFrameWnd
+class CMainFrame : public CFrameWndEx
 {
 protected: // create from serialization only
 	CMainFrame();
@@ -46,11 +46,13 @@ public:
 #endif
 
 public:
-	CToolBar    m_wndToolBar;
-	CStatusBar  m_wndStatusBar;
-	CFormatBar  m_wndFormatBar;
-	CRulerBar   m_wndRulerBar;
+	CMFCMenuBar    m_wndMenuBar;
+	CMFCToolBar    m_wndToolBar;
+	CMFCStatusBar  m_wndStatusBar;
+	CFormatBar     m_wndFormatBar;
+	CRulerBar      m_wndRulerBar;
 protected:  // control bar embedded members
+	BOOL CreateMenuBar();
 	BOOL CreateToolBar();
 	BOOL CreateFormatBar();
 	BOOL CreateStatusBar();
@@ -64,14 +66,19 @@ protected:
 	afx_msg void OnMove(int x, int y);
 	afx_msg void OnHelpFinder();
 	afx_msg void OnDropFiles(HDROP hDropInfo);
-	afx_msg void OnCharColor();
-	afx_msg void OnPenToggle();
 	afx_msg void OnFontChange();
 	afx_msg BOOL OnQueryNewPalette();
 	afx_msg void OnPaletteChanged(CWnd* pFocusWnd);
 	afx_msg void OnDevModeChange(LPTSTR lpDeviceName);
+	afx_msg void OnViewCustomize();
+	afx_msg void OnViewFullScreen();
 	//}}AFX_MSG
-	afx_msg LONG_PTR OnBarState(UINT_PTR wParam, LONG_PTR lParam);
-	afx_msg LONG_PTR OnOpenMsg(UINT_PTR wParam, LONG_PTR lParam);
+	afx_msg LONG_PTR OnBarState(WPARAM wParam, LPARAM lParam);
+	afx_msg LONG_PTR OnOpenMsg(WPARAM wParam, LPARAM lParam);
+	afx_msg LONG_PTR OnHelpCustomizeToolbars(WPARAM wParam, LPARAM lParam);
+	afx_msg LONG_PTR OnStartCustomize(WPARAM wParam, LPARAM lParam);
+	afx_msg LONG_PTR OnToolbarCreateNew(WPARAM, LPARAM);
+	afx_msg LONG_PTR OnGetDocumentColors(WPARAM, LPARAM);
+	afx_msg void OnAskQuestion();
 	DECLARE_MESSAGE_MAP()
 };

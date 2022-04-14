@@ -33,7 +33,7 @@ public:
 	virtual void ParseParam(const char* pszParam,BOOL bFlag,BOOL bLast);
 };
 
-class CWordPadApp : public CWinApp
+class CWordPadApp : public CWinAppEx
 {
 public:
 	CWordPadApp();
@@ -51,6 +51,7 @@ public:
 	BOOL m_bMaximized;
 	BOOL m_bPromptForType;
 	BOOL m_bWin4;
+	BOOL m_bHiColorIcons;
 #ifndef _UNICODE
 	BOOL m_bWin31;
 #endif
@@ -92,7 +93,7 @@ public:
 	BOOL PromptForFileName(CString& fileName, UINT nIDSTitle, DWORD dwFlags,
 		BOOL bOpenFileDialog, int* pType = NULL);
 
-	BOOL ParseMeasurement(TCHAR* buf, int& lVal);
+	BOOL ParseMeasurement(LPTSTR buf, int& lVal);
 	void PrintTwips(TCHAR* buf, int nSize, int nValue, int nDecimal);
 	void SaveOptions();
 	void LoadOptions();

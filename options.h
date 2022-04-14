@@ -21,7 +21,7 @@ public:
 	BOOL m_bSpaceAbbrev; // put space before abbreviation
 	CString m_strAbbrev;// cm, pt, pi, ", in, inch, inches
 
-	CUnit() {}
+	CUnit();
 	CUnit(int nTPU, int nSmallDiv, int nMediumDiv, int nLargeDiv,
 		int nMinMove, UINT nAbbrevID, BOOL bSpaceAbbrev);
 	const CUnit& operator=(const CUnit& unit);
@@ -30,7 +30,11 @@ public:
 class CDocOptions
 {
 public:
-	CDocOptions(int nDefWrap) {m_nDefWrap = nDefWrap;}
+	CDocOptions(int nDefWrap)
+	{
+		m_nDefWrap = nDefWrap;
+		m_nWordWrap = 0;
+	}
 	CDockState m_ds1;
 	CDockState m_ds2;
 	int m_nWordWrap;

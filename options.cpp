@@ -94,3 +94,14 @@ CUnit::CUnit(int nTPU, int nSmallDiv, int nMediumDiv, int nLargeDiv,
 	m_nAbbrevID = nAbbrevID;
 	m_bSpaceAbbrev = bSpaceAbbrev;
 }
+
+CUnit::CUnit()
+{
+	m_nTPU = 0;
+	m_nSmallDiv = 0;
+	m_nMediumDiv = 0;
+	m_nLargeDiv = 0;
+	m_nMinMove = 0;
+	m_nAbbrevID = 0;
+	m_bSpaceAbbrev = FALSE;
+}

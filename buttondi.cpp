@@ -154,13 +154,22 @@ BOOL CButtonDialog::OnInitDialog()
 void CButtonDialog::AddButtons(LPCTSTR lpszButton)
 {
 	CString str, strButtons;
-	int i=0;
+	int i = 0;
 	if (HIWORD(lpszButton) == NULL)
-		strButtons.LoadString(LOWORD((DWORD)(DWORD_PTR)lpszButton));
+	{
+		BOOL bValidString;
+		bValidString = strButtons.LoadString(LOWORD((UINT_PTR)lpszButton));
+		ASSERT(bValidString);
+	}
 	else
+	{
 		strButtons = lpszButton;
+	}
+
 	while (AfxExtractSubString(str, strButtons, i++, '\n'))
+	{
 		AddButton(str);
+	}
 }
 
 #ifndef DS_3DLOOK

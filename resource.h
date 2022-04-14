@@ -108,7 +108,9 @@
 #define IDS_INCH2_ABBREV                170
 #define IDS_INCH3_ABBREV                171
 #define IDS_INCH4_ABBREV                172
+#define IDR_TOOLBAR_IMAGES              172
 #define IDS_CM_ABBREV                   173
+#define IDR_TOOLBAR_IMAGES_BIG          173
 #define IDS_POINT_ABBREV                174
 #define IDS_PICA_ABBREV                 175
 #define IDS_NOMORETABS                  176
@@ -116,6 +118,7 @@
 #define IDS_ERRSPACE                    178
 #define IDS_CANT_LOAD                   179
 #define IDS_TOOMANYFILES                180
+#define IDD_APP_LOOK                    180
 #define IDS_DIRFULL                     181
 #define IDS_SHAREVIOLATION              182
 #define IDS_TEXT_OPTIONS                183
@@ -126,8 +129,10 @@
 #define IDS_EMBEDDED_OPTIONS            188
 #define IDS_TEXT_DOCUMENT               189
 #define IDS_RTF_DOCUMENT                190
+#define IDR_BORDER_TYPE                 190
 #define IDS_WORD6_DOCUMENT              191
 #define IDS_WRITEPROTECT                192
+#define IDS_TITLE_MENUBAR               193
 #define IDC_EDIT_LEFT                   1000
 #define IDC_EDIT_RIGHT                  1001
 #define IDC_EDIT_FIRST_LINE             1002
@@ -209,6 +214,11 @@
 #define ID_PEN_TOGGLE                   32812
 #define ID_PEN_LENS                     32813
 #define ID_PEN_TAB                      32814
+#define ID_VIEW_CUSTOMIZE               32816
+#define ID_VIEW_TOOLBARS                32885
+#define ID_VIEW_APP_LOOK                32950
+#define ID_VIEW_FULL_SCREEN             32965
+#define ID_HELP_FIND                    32968
 #define ID_VIEW_FORMATBAR               59396
 #define ID_VIEW_RULER                   59397
 
@@ -218,7 +228,7 @@
 #ifndef APSTUDIO_READONLY_SYMBOLS
 #define _APS_3D_CONTROLS                     1
 #define _APS_NEXT_RESOURCE_VALUE        172
-#define _APS_NEXT_COMMAND_VALUE         32816
+#define _APS_NEXT_COMMAND_VALUE         32966
 #define _APS_NEXT_CONTROL_VALUE         1040
 #define _APS_NEXT_SYMED_VALUE           103
 #endif
